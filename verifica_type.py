@@ -10,14 +10,14 @@ import pandas as pd
 import time
 
 
+dotenv.load_dotenv()
+
 options = webdriver.ChromeOptions()
 options.add_argument("--force-device-scale-factor=0.8")
 
 browse = webdriver.Chrome(options=options)
 browse.get("https://evo5.w12app.com.br/#/acesso/bluefit/autenticacao")
 browse.maximize_window()
-
-dotenv.load_dotenv()
 
 login_user = browse.find_element("id", "usuario")
 login_user.clear()
@@ -30,16 +30,13 @@ login_pass.send_keys(os.environ["PASSWORD"])
 button_login = browse.find_element("id", "entrar")
 button_login.click()
 
-spreadsheet_pay = 'listaa.xlsx'
+# Em spreadsheet_pay coloque o nome da lista no formato xlsx 
+spreadsheet_pay = 'nome_da_lista.xlsx'
 df = pd.read_excel(spreadsheet_pay, usecols=[0], skiprows=303, nrows=149, dtype={0: int})
-# utilize o parâmetro dtype={0: int} quando o número da coluna não for reconhecido
+# Utilize o parâmetro dtype={0: int} quando o número da coluna não for reconhecido como int.
 
-exclude_numbers = [1875758, 2202393, 1562633, 42210, 305290, 1509855, 1846558, 2209182,
-                        1630224, 1571040, 532502, 44230, 1509775, 1846558, 28551, 1809273,
-                        1595597, 1924708, 1488583, 1474003, 1467489, 1538948, 2258843,
-                        2126641, 39980, 1975475, 1974973, 32448, 1610865, 1495635, 1532336,
-                        1580880, 34128, 2212598, 2212441, 28329, 1858345, 41776, 1807721,
-                        1528733, 1818765, 2241809]
+# Caso possua algum id que não necessite de cobrança, coloque-o dentro da lista exclude_numbers.
+exclude_numbers = [414141]
 df = df.loc[~df.iloc[:, 0].isin(exclude_numbers)]
 
 sucess = 0
